@@ -1,0 +1,2 @@
+models/CNN/vgg16_weights.h5 filter=lfs diff=lfs merge=lfs -text
+models/VQA/VQA_MODEL_WEIGHTS.hdf5 filter=lfs diff=lfs merge=lfs -text
