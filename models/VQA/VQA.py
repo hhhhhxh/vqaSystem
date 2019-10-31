@@ -16,17 +16,6 @@ def VQA_MODEL():
     activation_function         = 'tanh'
     dropout_pct                 = 0.5
 
-    # TEST
-    # # # # # # # # # # # # # # # # #
-    # left = Sequential()
-    # right = Sequential()
-    # left_right = concatenate([left, right])
-    # print(type(left_right)) # <class 'keras.layers.merge.Concatenate'>
-    # result = Sequential()
-    # result.add(left_right)
-    # print(type(result))     # <class 'keras.engine.sequential.Sequential'>
-    # print(result.summary())
-
     # Image model
     model_image = Sequential()
     model_image.add(Reshape((image_feature_size,), input_shape=(image_feature_size,)))
@@ -37,23 +26,20 @@ def VQA_MODEL():
     model_language.add(LSTM(number_of_hidden_units_LSTM, return_sequences=True))
     model_language.add(LSTM(number_of_hidden_units_LSTM, return_sequences=False))
 
+    print("\n\n\nmodel_image_summary:")
     print(model_image.summary())
-    print(model_language.summary())
+    # print(model_language.summary())
 
-    # combined model
-    # merge_model = Concatenate([model_image, model_language])
-    # print(type(merge_model))    #
-    model = Sequential()
-    print(type(model_language)) # <class 'keras.engine.sequential.Sequential'>
-    print(type(model_image))    # <class 'keras.engine.sequential.Sequential'>
+    # type(model_language): <class 'keras.engine.sequential.Sequential'>
+    # type(model_image): <class 'keras.engine.sequential.Sequential'>
 
+    model = Sequential()    # Combined Model
     model.add(Merge([model_language, model_image], mode='concat', concat_axis=1))
+    # 在版本不同时会报错, 下面是试图改正错误的代码, 但未成功
     # model.add(Concatenate(axis=1)([model_language, model_image]))
-
-    # model.add(merge_model)
     # Concatenate([model_language, model_image], axis=1)
 
-    print(model.summary())
+    # print(model.summary())
 
     for _ in range(number_of_dense_layers):
         model.add(Dense(number_of_hidden_units, kernel_initializer='uniform'))
@@ -64,8 +50,3 @@ def VQA_MODEL():
     model.add(Activation('softmax'))
 
     return model
-
-
-
-
-

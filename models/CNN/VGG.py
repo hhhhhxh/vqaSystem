@@ -9,13 +9,14 @@ import numpy as np
 
 
 def mypop(model):
-    '''Removes a layer instance on top of the layer stack.
+    '''
+    Removes a layer instance on top of the layer stack.
     This code is thanks to @joelthchao https://github.com/fchollet/keras/issues/2371#issuecomment-211734276
     '''
     if not model.outputs:
         raise Exception('Sequential model cannot be popped: model is empty.')
     else:
-        model.pop() # not model.layer.pop()
+        model.pop()     # not model.layer.pop()
         if not model.layers:
             model.outputs = []
             model.inbound_nodes = []
@@ -28,9 +29,10 @@ def mypop(model):
 
 
 def load_model_legacy(model, weight_path):
-    ''' this function is used because the weights in this model
-    were trained with legacy keras. New keras does not support loading these weights '''
-
+    ''' 
+    this function is used because the weights in this model
+    were trained with legacy keras. New keras does not support loading these weights 
+    '''
     import h5py
     f = h5py.File(weight_path, mode='r')
     flattened_layers = model.layers
@@ -95,15 +97,13 @@ def VGG_16(weights_path=None):
     model.add(Dropout(0.5))
     model.add(Dense(4096, activation='relu'))
     model.add(Dropout(0.5))
-    model.add(Dense(1000, activation='softmax')) ####################################
+    model.add(Dense(1000, activation='softmax'))
 
     if weights_path:
         # model.load_weights(weights_path)
         load_model_legacy(model, weights_path)
 
     # Remove the last two layers to get the 4096D activations
-    # model.layers.pop()
-    # model.layers.pop()
     model = mypop(model)
     model = mypop(model)
 
